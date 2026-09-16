@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Pond - Gacha Catch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="water-background">
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+        <div class="bubble b4"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>CYBER <span>POND</span></h1>
+            <p>ตกไอเทมในสระน้ำไซเบอร์ ลุ้นรับรางวัลสุดล้ำ!</p>
+        </header>
+
+        <div class="pond-container">
+            <div class="tractor-beam" id="tractor-beam"></div>
+            <div class="caught-item" id="caught-item">
+                <img src="" id="caught-img" alt="">
+            </div>
+            
+            <div class="water-surface">
+                <div class="ripple" id="ripple"></div>
+            </div>
+            <button class="catch-btn" id="catch-btn">CATCH!</button>
+        </div>
+
+        <div class="result-modal" id="result-modal">
+            <div class="modal-content">
+                <h2 id="result-title">ยินดีด้วย!</h2>
+                <div class="result-image-container" id="result-image"></div>
+                <p id="result-message">คุณได้รับรางวัล</p>
+                <button class="close-btn" id="close-btn">เก็บลงกระเป๋า</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
