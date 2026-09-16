@@ -43,6 +43,9 @@ catchBtn.addEventListener('click', () => {
         selectedItem = misses[Math.floor(Math.random() * misses.length)];
     }
     
+    // โอกาส Fake-out หักมุม 50% ถ้าชนะ
+    const isFakeOut = isWinner && Math.random() < 0.5;
+    
     // Phase 1: SCANNING (Radar on water)
     radar.classList.add('active');
     
@@ -90,7 +93,31 @@ catchBtn.addEventListener('click', () => {
                     setTimeout(() => {
                         mysteryOrb.style.display = 'none';
                         caughtImg.style.display = 'block';
-                        showResult(selectedItem);
+                        
+                        if (isFakeOut) {
+                            // โชว์ว่าไม่ได้รางวัลก่อน
+                            const misses = items.filter(i => i.type === 'miss');
+                            const fakeMissItem = misses[Math.floor(Math.random() * misses.length)];
+                            showResult(fakeMissItem, true); // true = is temporary
+                            
+                            setTimeout(() => {
+                                // Glitch Effect
+                                const modalImg = resultImage.querySelector('img');
+                                if (modalImg) modalImg.classList.add('fake-out-glitch');
+                                resultTitle.textContent = 'ERROR... HACKED!!';
+                                resultTitle.classList.add('fake-out-glitch');
+                                resultTitle.style.color = '#00f0ff';
+                                
+                                setTimeout(() => {
+                                    if (modalImg) modalImg.classList.remove('fake-out-glitch');
+                                    resultTitle.classList.remove('fake-out-glitch');
+                                    showResult(selectedItem); // โชว์รางวัลจริง!
+                                }, 800); // ระยะเวลา Glitch
+                            }, 1500); // รอ 1.5 วิให้คนตายใจ
+                            
+                        } else {
+                            showResult(selectedItem);
+                        }
                         
                         setTimeout(() => {
                             flashOverlay.classList.remove('active'); // Fade out flash
@@ -108,7 +135,7 @@ catchBtn.addEventListener('click', () => {
     }, 1500); // 1.5s radar scanning
 });
 
-function showResult(item) {
+function showResult(item, isTemporary = false) {
     resultImage.innerHTML = ''; 
     const imgElement = document.createElement('img');
     imgElement.src = item.img;
@@ -119,11 +146,17 @@ function showResult(item) {
         resultTitle.style.textShadow = '0 0 20px rgba(251, 191, 36, 0.6)';
         imgElement.style.background = 'white';
         imgElement.style.padding = '20px';
-        createBubbles();
+        if (!isTemporary) {
+            createBubbles();
+            createParticles('confetti');
+        }
     } else {
         resultTitle.textContent = 'ไม่ได้รางวัล!';
         resultTitle.style.color = '#f43f5e';
         resultTitle.style.textShadow = '0 0 20px rgba(244, 63, 94, 0.6)';
+        if (!isTemporary) {
+            createParticles('sparks');
+        }
     }
     
     resultImage.appendChild(imgElement);
@@ -144,7 +177,50 @@ closeBtn.addEventListener('click', () => {
     catchBtn.style.color = '';
     catchBtn.style.background = '';
     isCatching = false;
+    
+    // Clear elements
+    document.querySelectorAll('.confetti, .spark').forEach(e => e.remove());
 });
+
+function createParticles(type) {
+    const numParticles = type === 'confetti' ? 50 : 20;
+    const colors = ['#fbbf24', '#00f0ff', '#ff003c', '#fff'];
+    
+    for (let i = 0; i < numParticles; i++) {
+        const p = document.createElement('div');
+        p.classList.add(type);
+        
+        if (type === 'confetti') {
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            p.style.left = `50%`;
+            p.style.top = `50%`;
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 5 + Math.random() * 15;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            p.animate([
+                { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                { transform: `translate(${vx * 20}px, ${vy * 20 + 200}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+            ], { duration: 1500 + Math.random() * 1000, easing: 'cubic-bezier(0, .9, .57, 1)', fill: 'forwards' });
+            
+        } else {
+            p.style.left = `50%`;
+            p.style.top = `50%`;
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 2 + Math.random() * 10;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            p.animate([
+                { transform: `translate(0, 0)`, opacity: 1 },
+                { transform: `translate(${vx * 10}px, ${vy * 10}px)`, opacity: 0 }
+            ], { duration: 500 + Math.random() * 500, easing: 'ease-out', fill: 'forwards' });
+        }
+        
+        document.body.appendChild(p);
+    }
+}
 
 function createBubbles() {
     for (let i = 0; i < 40; i++) {
