@@ -8,9 +8,13 @@ const items = [
 
 const catchBtn = document.getElementById('catch-btn');
 const ripple = document.getElementById('ripple');
+const radar = document.getElementById('radar');
 const tractorBeam = document.getElementById('tractor-beam');
 const caughtItem = document.getElementById('caught-item');
+const mysteryOrb = document.getElementById('mystery-orb');
 const caughtImg = document.getElementById('caught-img');
+const mainContainer = document.getElementById('main-container');
+const flashOverlay = document.getElementById('flash-overlay');
 
 const modal = document.getElementById('result-modal');
 const closeBtn = document.getElementById('close-btn');
@@ -39,34 +43,52 @@ catchBtn.addEventListener('click', () => {
         selectedItem = misses[Math.floor(Math.random() * misses.length)];
     }
     
-    // เริ่มแอนิเมชันน้ำกระเพื่อม
-    ripple.classList.add('active');
+    // Phase 1: SCANNING (Radar on water)
+    radar.classList.add('active');
     
     setTimeout(() => {
-        // ยิงลำแสง
-        tractorBeam.classList.add('active');
-        catchBtn.textContent = 'EXTRACTING!';
+        // Phase 2: TARGET LOCKED
+        radar.classList.remove('active');
+        ripple.classList.add('active');
+        catchBtn.textContent = 'TARGET LOCKED';
+        catchBtn.style.color = '#fff';
+        catchBtn.style.background = 'var(--primary-pink)';
         
         setTimeout(() => {
-            // ดึงของขึ้นมา
-            caughtImg.src = selectedItem.img;
-            if(selectedItem.type === 'prize') {
-                caughtImg.style.background = 'white';
-                caughtImg.style.padding = '15px';
-            } else {
-                caughtImg.style.background = 'transparent';
-                caughtImg.style.padding = '0';
-            }
-            
-            caughtItem.classList.add('active');
+            // Phase 3: EXTRACTING
+            tractorBeam.classList.add('active');
+            catchBtn.textContent = 'EXTRACTING...';
             
             setTimeout(() => {
-                showResult(selectedItem);
-            }, 1200);
+                // Pull up the mystery orb
+                caughtImg.style.display = 'none';
+                mysteryOrb.style.display = 'flex';
+                caughtItem.classList.add('active');
+                
+                // Shake the container for suspense
+                mainContainer.classList.add('shake');
+                
+                setTimeout(() => {
+                    // Phase 4: REVEAL (Flash and show result)
+                    mainContainer.classList.remove('shake');
+                    flashOverlay.classList.add('active'); // White flash
+                    
+                    setTimeout(() => {
+                        showResult(selectedItem);
+                        
+                        setTimeout(() => {
+                            flashOverlay.classList.remove('active'); // Fade out flash
+                        }, 200);
+                        
+                    }, 100);
+                    
+                }, 2000); // 2 seconds of shaking suspense
+                
+            }, 1000); // Wait for beam to hit water
             
-        }, 1000); // รอจนแสงแตะผิวน้ำ
+        }, 800); // 0.8s target lock delay
         
-    }, 500); 
+    }, 1500); // 1.5s radar scanning
 });
 
 function showResult(item) {
@@ -96,16 +118,17 @@ function showResult(item) {
 closeBtn.addEventListener('click', () => {
     modal.classList.remove('active');
     
-    // รีเซ็ตค่าเพื่อเล่นใหม่
+    // รีเซ็ตค่า
     ripple.classList.remove('active');
     tractorBeam.classList.remove('active');
     caughtItem.classList.remove('active');
     catchBtn.disabled = false;
     catchBtn.textContent = 'CATCH!';
+    catchBtn.style.color = '';
+    catchBtn.style.background = '';
     isCatching = false;
 });
 
-// เอฟเฟกต์ฟองอากาศฉลองตอนได้รางวัล
 function createBubbles() {
     for (let i = 0; i < 40; i++) {
         const bubble = document.createElement('div');

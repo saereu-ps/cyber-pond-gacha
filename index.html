@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="flash-overlay" id="flash-overlay"></div>
+    
     <div class="water-background">
         <div class="bubble b1"></div>
         <div class="bubble b2"></div>
@@ -15,7 +17,7 @@
         <div class="bubble b4"></div>
     </div>
     
-    <div class="container">
+    <div class="container" id="main-container">
         <header>
             <h1>CYBER <span>POND</span></h1>
             <p>ตกไอเทมในสระน้ำไซเบอร์ ลุ้นรับรางวัลสุดล้ำ!</p>
@@ -23,11 +25,14 @@
 
         <div class="pond-container">
             <div class="tractor-beam" id="tractor-beam"></div>
+            
             <div class="caught-item" id="caught-item">
-                <img src="" id="caught-img" alt="">
+                <div class="mystery-orb" id="mystery-orb">?</div>
+                <img src="" id="caught-img" alt="" style="display: none;">
             </div>
             
             <div class="water-surface">
+                <div class="radar" id="radar"></div>
                 <div class="ripple" id="ripple"></div>
             </div>
             <button class="catch-btn" id="catch-btn">CATCH!</button>
@@ -38,7 +43,7 @@
                 <h2 id="result-title">ยินดีด้วย!</h2>
                 <div class="result-image-container" id="result-image"></div>
                 <p id="result-message">คุณได้รับรางวัล</p>
-                <button class="close-btn" id="close-btn">เก็บลงกระเป๋า</button>
+                <button class="close-btn" id="close-btn">ยืนยัน</button>
             </div>
         </div>
     </div>
