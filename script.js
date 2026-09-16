@@ -86,7 +86,7 @@ catchBtn.addEventListener('click', () => {
                 setTimeout(() => {
                     clearInterval(shuffleInterval); // หยุดสลับรูป
                     
-                    // Phase 4: REVEAL (Flash and show result)
+                    // Phase 4: REVEAL (Flash and show modal with spinning roulette)
                     mainContainer.classList.remove('shake');
                     flashOverlay.classList.add('active'); // White flash
                     
@@ -94,30 +94,7 @@ catchBtn.addEventListener('click', () => {
                         mysteryOrb.style.display = 'none';
                         caughtImg.style.display = 'block';
                         
-                        if (isFakeOut) {
-                            // โชว์ว่าไม่ได้รางวัลก่อน
-                            const misses = items.filter(i => i.type === 'miss');
-                            const fakeMissItem = misses[Math.floor(Math.random() * misses.length)];
-                            showResult(fakeMissItem, true); // true = is temporary
-                            
-                            setTimeout(() => {
-                                // Glitch Effect
-                                const modalImg = resultImage.querySelector('img');
-                                if (modalImg) modalImg.classList.add('fake-out-glitch');
-                                resultTitle.textContent = 'ERROR... HACKED!!';
-                                resultTitle.classList.add('fake-out-glitch');
-                                resultTitle.style.color = '#00f0ff';
-                                
-                                setTimeout(() => {
-                                    if (modalImg) modalImg.classList.remove('fake-out-glitch');
-                                    resultTitle.classList.remove('fake-out-glitch');
-                                    showResult(selectedItem); // โชว์รางวัลจริง!
-                                }, 800); // ระยะเวลา Glitch
-                            }, 1500); // รอ 1.5 วิให้คนตายใจ
-                            
-                        } else {
-                            showResult(selectedItem);
-                        }
+                        showResultWithRoulette(selectedItem, isFakeOut);
                         
                         setTimeout(() => {
                             flashOverlay.classList.remove('active'); // Fade out flash
@@ -135,10 +112,65 @@ catchBtn.addEventListener('click', () => {
     }, 1500); // 1.5s radar scanning
 });
 
-function showResult(item, isTemporary = false) {
-    resultImage.innerHTML = ''; 
+function showResultWithRoulette(finalItem, isFakeOut) {
+    modal.classList.add('active');
+    resultTitle.textContent = 'REVEALING...';
+    resultTitle.style.color = '#fff';
+    resultTitle.style.textShadow = '0 0 15px #fff';
+    resultTitle.classList.remove('fake-out-glitch');
+    
+    resultImage.innerHTML = '';
     const imgElement = document.createElement('img');
+    resultImage.appendChild(imgElement);
+    imgElement.style.background = 'transparent';
+    imgElement.style.padding = '0';
+    imgElement.classList.remove('fake-out-glitch');
+    
+    resultMessage.textContent = 'กำลังประมวลผล...';
+    
+    let spinCount = 0;
+    const maxSpins = 15;
+    let currentDelay = 40;
+    
+    function spin() {
+        imgElement.src = items[spinCount % items.length].img;
+        spinCount++;
+        
+        if (spinCount < maxSpins) {
+            if (spinCount > 8) currentDelay += 20; // slow down
+            setTimeout(spin, currentDelay);
+        } else {
+            if (isFakeOut) {
+                const misses = items.filter(i => i.type === 'miss');
+                const fakeMiss = misses[Math.floor(Math.random() * misses.length)];
+                renderFinalResult(fakeMiss, true, imgElement);
+                
+                setTimeout(() => {
+                    // Glitch Effect!
+                    imgElement.classList.add('fake-out-glitch');
+                    resultTitle.textContent = 'ERROR... HACKED!!';
+                    resultTitle.classList.add('fake-out-glitch');
+                    resultTitle.style.color = '#00f0ff';
+                    
+                    setTimeout(() => {
+                        imgElement.classList.remove('fake-out-glitch');
+                        resultTitle.classList.remove('fake-out-glitch');
+                        renderFinalResult(finalItem, false, imgElement);
+                    }, 800);
+                }, 1500);
+                
+            } else {
+                renderFinalResult(finalItem, false, imgElement);
+            }
+        }
+    }
+    
+    spin();
+}
+
+function renderFinalResult(item, isTemporary, imgElement) {
     imgElement.src = item.img;
+    resultMessage.textContent = item.message;
     
     if (item.type === 'prize') {
         resultTitle.textContent = '🎉 BINGO! 🎉';
@@ -154,15 +186,12 @@ function showResult(item, isTemporary = false) {
         resultTitle.textContent = 'ไม่ได้รางวัล!';
         resultTitle.style.color = '#f43f5e';
         resultTitle.style.textShadow = '0 0 20px rgba(244, 63, 94, 0.6)';
+        imgElement.style.background = 'transparent';
+        imgElement.style.padding = '0';
         if (!isTemporary) {
             createParticles('sparks');
         }
     }
-    
-    resultImage.appendChild(imgElement);
-    resultMessage.textContent = item.message;
-    
-    modal.classList.add('active');
 }
 
 closeBtn.addEventListener('click', () => {
