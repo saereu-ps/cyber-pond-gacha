@@ -6,6 +6,12 @@ const items = [
     { type: 'miss', name: 'ไม่ได้', img: 'cyber_shell.jpg', message: 'ไม่ได้รางวัลครับ... ลองพยายามใหม่อีกครั้งนะ!' }
 ];
 
+// Preload images to prevent flickering/ghosting on Safari/iPad
+items.forEach(item => {
+    const img = new Image();
+    img.src = item.img;
+});
+
 const catchBtn = document.getElementById('catch-btn');
 const ripple = document.getElementById('ripple');
 const radar = document.getElementById('radar');
@@ -105,6 +111,7 @@ catchBtn.addEventListener('click', () => {
                     setTimeout(() => {
                         mysteryOrb.style.display = 'none';
                         caughtImg.style.display = 'block';
+                        caughtImg.src = selectedItem.img; // Fix empty src issue
                         
                         showResultWithRoulette(selectedItem, isFakeOut);
                         
@@ -239,12 +246,14 @@ function createParticles(type) {
             const velocity = 5 + Math.random() * 15;
             const vx = Math.cos(angle) * velocity;
             const vy = Math.sin(angle) * velocity;
+            const duration = 1500 + Math.random() * 1000;
             
             p.animate([
                 { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
                 { transform: `translate(${vx * 20}px, ${vy * 20 + 200}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
-            ], { duration: 1500 + Math.random() * 1000, easing: 'cubic-bezier(0, .9, .57, 1)', fill: 'forwards' });
+            ], { duration: duration, easing: 'cubic-bezier(0, .9, .57, 1)', fill: 'forwards' });
             
+            setTimeout(() => p.remove(), duration);
         } else {
             p.style.left = `50%`;
             p.style.top = `50%`;
@@ -252,11 +261,14 @@ function createParticles(type) {
             const velocity = 2 + Math.random() * 10;
             const vx = Math.cos(angle) * velocity;
             const vy = Math.sin(angle) * velocity;
+            const duration = 500 + Math.random() * 500;
             
             p.animate([
                 { transform: `translate(0, 0)`, opacity: 1 },
                 { transform: `translate(${vx * 10}px, ${vy * 10}px)`, opacity: 0 }
-            ], { duration: 500 + Math.random() * 500, easing: 'ease-out', fill: 'forwards' });
+            ], { duration: duration, easing: 'ease-out', fill: 'forwards' });
+            
+            setTimeout(() => p.remove(), duration);
         }
         
         document.body.appendChild(p);
