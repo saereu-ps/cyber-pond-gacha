@@ -18,6 +18,18 @@ const flashOverlay = document.getElementById('flash-overlay');
 
 const modal = document.getElementById('result-modal');
 const closeBtn = document.getElementById('close-btn');
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+});
+
 const resultTitle = document.getElementById('result-title');
 const resultImage = document.getElementById('result-image');
 const resultMessage = document.getElementById('result-message');

@@ -289,3 +289,34 @@ header p { font-size: 1.3rem; color: #a5f3fc; margin-bottom: 3rem; letter-spacin
     box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
 }
 
+/* Fullscreen Button */
+.fullscreen-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(2, 6, 23, 0.7);
+    border: 2px solid var(--beam-color);
+    border-radius: 8px;
+    color: var(--beam-color);
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+.fullscreen-btn:hover {
+    background: var(--beam-color);
+    color: var(--bg-dark);
+    box-shadow: 0 0 20px var(--beam-color);
+    transform: scale(1.1);
+}
+.fullscreen-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
