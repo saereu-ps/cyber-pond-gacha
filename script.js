@@ -30,8 +30,8 @@ catchBtn.addEventListener('click', () => {
     catchBtn.disabled = true;
     catchBtn.textContent = 'SCANNING...';
     
-    // โอกาสได้รางวัล 10%
-    const winRate = 0.10;
+    // โอกาสได้รางวัล 30%
+    const winRate = 0.30;
     const isWinner = Math.random() < winRate;
     
     let selectedItem;
@@ -63,17 +63,33 @@ catchBtn.addEventListener('click', () => {
                 // Pull up the mystery orb
                 caughtImg.style.display = 'none';
                 mysteryOrb.style.display = 'flex';
+                
+                // เริ่มสลับรูปภาพใน Mystery Orb เพื่อความลุ้น
+                mysteryOrb.innerHTML = '<img src="" style="width:70%; height:70%; object-fit:contain; filter:drop-shadow(0 0 10px #fff);">';
+                const shuffleImg = mysteryOrb.querySelector('img');
+                let shuffleIndex = 0;
+                
+                const shuffleInterval = setInterval(() => {
+                    // สลับรูปไวๆ โชว์ให้เห็นว่ามีรางวัลอยู่จริง
+                    shuffleImg.src = items[shuffleIndex % items.length].img;
+                    shuffleIndex++;
+                }, 100); // เปลี่ยนรูปทุกๆ 0.1 วินาที
+                
                 caughtItem.classList.add('active');
                 
                 // Shake the container for suspense
                 mainContainer.classList.add('shake');
                 
                 setTimeout(() => {
+                    clearInterval(shuffleInterval); // หยุดสลับรูป
+                    
                     // Phase 4: REVEAL (Flash and show result)
                     mainContainer.classList.remove('shake');
                     flashOverlay.classList.add('active'); // White flash
                     
                     setTimeout(() => {
+                        mysteryOrb.style.display = 'none';
+                        caughtImg.style.display = 'block';
                         showResult(selectedItem);
                         
                         setTimeout(() => {
@@ -82,7 +98,8 @@ catchBtn.addEventListener('click', () => {
                         
                     }, 100);
                     
-                }, 2000); // 2 seconds of shaking suspense
+                }, 2500); // 2.5 seconds of shaking suspense and shuffling
+
                 
             }, 1000); // Wait for beam to hit water
             
