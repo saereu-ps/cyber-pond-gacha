@@ -61,9 +61,6 @@ catchBtn.addEventListener('click', () => {
         selectedItem = misses[Math.floor(Math.random() * misses.length)];
     }
     
-    // โอกาส Fake-out หักมุม 50% ถ้าชนะ
-    const isFakeOut = isWinner && Math.random() < 0.5;
-    
     // Phase 1: SCANNING (Radar on water)
     radar.classList.add('active');
     
@@ -113,7 +110,7 @@ catchBtn.addEventListener('click', () => {
                         caughtImg.style.display = 'block';
                         caughtImg.src = selectedItem.img; // Fix empty src issue
                         
-                        showResultWithRoulette(selectedItem, isFakeOut);
+                        showResultWithRoulette(selectedItem);
                         
                         setTimeout(() => {
                             flashOverlay.classList.remove('active'); // Fade out flash
@@ -131,7 +128,7 @@ catchBtn.addEventListener('click', () => {
     }, 1500); // 1.5s radar scanning
 });
 
-function showResultWithRoulette(finalItem, isFakeOut) {
+function showResultWithRoulette(finalItem) {
     modal.classList.add('active');
     resultTitle.textContent = 'REVEALING...';
     resultTitle.style.color = '#fff';
@@ -159,28 +156,7 @@ function showResultWithRoulette(finalItem, isFakeOut) {
             if (spinCount > 8) currentDelay += 20; // slow down
             setTimeout(spin, currentDelay);
         } else {
-            if (isFakeOut) {
-                const misses = items.filter(i => i.type === 'miss');
-                const fakeMiss = misses[Math.floor(Math.random() * misses.length)];
-                renderFinalResult(fakeMiss, true, imgElement);
-                
-                setTimeout(() => {
-                    // Glitch Effect!
-                    imgElement.classList.add('fake-out-glitch');
-                    resultTitle.textContent = 'ERROR... HACKED!!';
-                    resultTitle.classList.add('fake-out-glitch');
-                    resultTitle.style.color = '#00f0ff';
-                    
-                    setTimeout(() => {
-                        imgElement.classList.remove('fake-out-glitch');
-                        resultTitle.classList.remove('fake-out-glitch');
-                        renderFinalResult(finalItem, false, imgElement);
-                    }, 800);
-                }, 1500);
-                
-            } else {
-                renderFinalResult(finalItem, false, imgElement);
-            }
+            renderFinalResult(finalItem, false, imgElement);
         }
     }
     
