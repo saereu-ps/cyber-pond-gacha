@@ -191,6 +191,7 @@ header p { font-size: 1.3rem; color: #a5f3fc; margin-bottom: 3rem; letter-spacin
 
 .catch-btn {
     display: inline-block;
+    margin-top: 1.5rem;
     padding: 1.2rem 4.5rem; border-radius: 5px; border: 2px solid var(--primary-pink);
     background: rgba(2, 6, 23, 0.9); color: var(--primary-pink);
     font-size: 1.8rem; font-weight: 800; cursor: pointer;
