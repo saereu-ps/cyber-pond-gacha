@@ -1,9 +1,9 @@
 const items = [
     { type: 'prize', name: 'Google Cloud Prize', img: 'Google_cloud.png', message: 'คุณได้รับรางวัลสุดล้ำจาก Google Cloud!' },
     { type: 'prize', name: 'MFEC Prize', img: 'New-Logo-MFEC-More_Black-2.png', message: 'คุณได้รับรางวัลสุดคูลจาก MFEC!' },
-    { type: 'miss', name: 'หุ่นยนต์แมงกะพรุน', img: 'cyber_jellyfish.jpg', message: 'ดวงยังไม่มา ได้แมงกะพรุนไซเบอร์ไปเลี้ยงแทนนะ' },
-    { type: 'miss', name: 'รองเท้าไซเบอร์', img: 'cyber_boot.jpg', message: 'ว้าาา ตกได้รองเท้าบูทเก่าๆ ซะงั้น' },
-    { type: 'miss', name: 'เปลือกหอยเรืองแสง', img: 'cyber_shell.jpg', message: 'เปลือกหอยว่างเปล่า... พยายามใหม่อีกครั้ง!' }
+    { type: 'miss', name: 'ไม่ได้', img: 'cyber_jellyfish.jpg', message: 'ไม่ได้รางวัลครับ... ลองพยายามใหม่อีกครั้งนะ!' },
+    { type: 'miss', name: 'ไม่ได้', img: 'cyber_boot.jpg', message: 'ไม่ได้รางวัลครับ... ลองพยายามใหม่อีกครั้งนะ!' },
+    { type: 'miss', name: 'ไม่ได้', img: 'cyber_shell.jpg', message: 'ไม่ได้รางวัลครับ... ลองพยายามใหม่อีกครั้งนะ!' }
 ];
 
 const catchBtn = document.getElementById('catch-btn');
@@ -121,7 +121,7 @@ function showResult(item) {
         imgElement.style.padding = '20px';
         createBubbles();
     } else {
-        resultTitle.textContent = 'ALMOST...';
+        resultTitle.textContent = 'ไม่ได้รางวัล!';
         resultTitle.style.color = '#f43f5e';
         resultTitle.style.textShadow = '0 0 20px rgba(244, 63, 94, 0.6)';
     }
